@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Create, format and export a professional CV in your browser.">
+  <title>Big Mac CV Builder</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://unpkg.com/docx@8.5.0/build/index.umd.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><div class="brand-mark">CV</div><div><strong>Big Mac CV Builder</strong><small>Resume builder</small></div></div>
+    <div class="top-actions">
+      <button id="openProjectBtn" class="button secondary">Open .fcv</button>
+      <button id="saveProjectBtn" class="button secondary">Save .fcv</button>
+      <button id="exportWordBtn" class="button secondary">Export Word</button>
+      <button id="exportPdfBtn" class="button primary">Export PDF</button>
+      <input id="projectFileInput" type="file" accept=".fcv,.json,application/json" hidden>
+    </div>
+  </header>
+
+  <main class="workspace">
+    <aside class="editor-panel">
+      <div class="panel-heading"><div><h1>Build your CV</h1><p>Edit your details and see changes live.</p></div><span id="saveStatus" class="save-status">Ready</span></div>
+      <details class="settings-card" open>
+        <summary>Design settings</summary>
+        <div class="settings-grid">
+          <label>Template<select id="template"><option>Formal Black &amp; White</option><option>Modern</option><option>Classic</option></select></label>
+          <label>Layout<select id="layoutMode"><option>Single Column</option><option>Two Columns</option></select></label>
+          <label>Colour palette<select id="palette"><option>Formal Black &amp; White</option><option>Ocean Blue</option><option>Forest Green</option><option>Burgundy</option><option>Charcoal</option><option>Custom...</option></select></label>
+          <label>Custom colour<input id="customAccent" type="color" value="#111111" aria-label="Custom accent colour"></label>
+          <label>Font<select id="font"><option>Arial</option><option>Calibri</option><option>Aptos</option><option>Georgia</option><option>Times New Roman</option></select></label>
+          <label>Font size <span id="fontSizeValue">10 pt</span><input id="fontSize" type="range" min="8" max="12" value="10"></label>
+          <label>Page margins <span id="marginValue">15 mm</span><input id="margin" type="range" min="8" max="25" value="15"></label>
+        </div>
+      </details>
+
+      <nav class="tabbar" aria-label="CV sections">
+        <button class="tab active" data-tab="personal">Personal</button><button class="tab" data-tab="summary">Summary</button><button class="tab" data-tab="experience">Experience</button><button class="tab" data-tab="education">Education</button><button class="tab" data-tab="projects">Projects</button><button class="tab" data-tab="extras">Skills &amp; Certifications</button>
+      </nav>
+      <section class="form-tab active" id="tab-personal">
+        <div class="form-grid">
+          <label>Full name<input data-field="name" placeholder="Your Name"></label>
+          <label>Professional title<input data-field="title" placeholder="Food Scientist"></label>
+          <label>Email<input data-field="email" type="email" placeholder="name@example.com"></label>
+          <label>Phone<input data-field="phone" placeholder="+64 ..."></label>
+          <label>Location<input data-field="location" placeholder="Auckland, New Zealand"></label>
+          <label>LinkedIn / Website<input data-field="linkedin" placeholder="linkedin.com/in/..."></label>
+        </div>
+      </section>
+      <section class="form-tab" id="tab-summary"><label>Professional summary<textarea data-field="summary" rows="7" placeholder="Write a concise, role-specific summary."></textarea></label><p class="hint">Tip: focus on your experience, strengths and the value you bring to the role.</p></section>
+      <section class="form-tab" id="tab-experience"><div class="section-title"><div><h2>Work experience</h2><p>Add roles, achievements and responsibilities.</p></div><button class="button primary small" data-add="experience">+ Add experience</button></div><div id="experienceList" class="entry-list"></div></section>
+      <section class="form-tab" id="tab-education"><div class="section-title"><div><h2>Education</h2><p>Add qualifications and relevant details.</p></div><button class="button primary small" data-add="education">+ Add education</button></div><div id="educationList" class="entry-list"></div></section>
+      <section class="form-tab" id="tab-projects"><div class="section-title"><div><h2>Projects</h2><p>Highlight research, projects and outcomes.</p></div><button class="button primary small" data-add="projects">+ Add project</button></div><div id="projectsList" class="entry-list"></div></section>
+      <section class="form-tab" id="tab-extras">
+        <label>Skills<textarea data-field="skills" rows="4" placeholder="HACCP, HPLC, Quality Assurance"></textarea></label><p class="hint">Separate skills with commas, semicolons or new lines.</p>
+        <label>Certifications<textarea data-field="certifications" rows="4" placeholder="One certification per line"></textarea></label>
+      </section>
+      <footer class="editor-footer"><span>Designed for local-first editing.</span><button id="clearBtn" class="text-button">Clear CV</button></footer>
+    </aside>
+
+    <section class="preview-panel">
+      <div class="preview-toolbar"><div><strong>LIVE PREVIEW</strong><span id="previewHint">A4 · Updates automatically</span></div><div class="zoom-controls"><button id="zoomOut" aria-label="Zoom out">−</button><button id="zoomFit">Fit</button><button id="zoomIn" aria-label="Zoom in">+</button></div></div>
+      <div class="preview-stage" id="previewStage"><article class="cv-page" id="cvPage"></article></div>
+    </section>
+  </main>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
